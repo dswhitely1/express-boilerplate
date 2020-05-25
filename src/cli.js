@@ -1,6 +1,7 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
 import path from 'path';
+import execa from 'execa';
 import { packageList } from './packages';
 
 async function getConfig(rawArgs) {
@@ -25,6 +26,18 @@ async function getConfig(rawArgs) {
 
   const answers = await inquirer.prompt(questions);
 
+  try {
+    const result = await execa('yarn', ['--version']);
+    options.pkgMgr = 'yarn';
+    options.flags = ['add'];
+    options.devFlags = ['--dev'];
+  } catch (error) {
+    options.pkgMgr = 'npm';
+    options.flags = ['install'];
+    options.devFlags = ['-D'];
+    process.exit(1);
+  }
+
   const currentFileUrl = import.meta.url;
   const templateDir = path.resolve(
     new URL(currentFileUrl).pathname,
@@ -33,9 +46,9 @@ async function getConfig(rawArgs) {
   const targetDirectory = `${process.cwd()}/${options.directory ||
     answers.directory}`;
   return {
-    pkgMgr: 'yarn',
-    flags: ['add'],
-    devFlags: ['--dev'],
+    pkgMgr: options.pkgMgr,
+    flags: options.flags,
+    devFlags: options.devFlags,
     directory: options.directory || answers.directory,
     templateDirectory: templateDir,
     targetDirectory,
@@ -44,6 +57,5 @@ async function getConfig(rawArgs) {
 
 export async function cli(args) {
   const options = await getConfig(args);
-  packageList(options);
   console.log(options);
 }

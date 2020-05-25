@@ -47,10 +47,8 @@ export const packageList = options => {
     devDependencies
   );
 
-  const packageInstall = taskListGenerator('Project Install', [
+  return taskListGenerator('Project Install', [
     dependencyTask,
     devDependencyTask,
   ]);
-
-  console.log(packageInstall);
 };
