@@ -3,6 +3,13 @@
   "version": "1.0.0",
   "description": "",
   "main": "index.js",
+  "bin": {
+    "@dswhitely1/express-boilerplate": "bin/express-boilerplate",
+    "express-boilerplate": "bin/express-boilerplate"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
   "scripts": {
     "lint": "eslint . --fix",
     "test": "echo \"Error: no test specified\" && exit 1"

@@ -1,5 +1,6 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
+import path from 'path';
 
 async function getConfig(rawArgs) {
   const args = arg(
@@ -23,8 +24,17 @@ async function getConfig(rawArgs) {
 
   const answers = await inquirer.prompt(questions);
 
+  const currentFileUrl = import.meta.url;
+  const templateDir = path.resolve(
+    new URL(currentFileUrl).pathname,
+    '../template'
+  );
+  const targetDirectory = `${process.cwd()}/${options.directory ||
+    answers.directory}`;
   return {
     directory: options.directory || answers.directory,
+    templateDirectory: templateDir,
+    targetDirectory,
   };
 }
 
