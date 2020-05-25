@@ -1,6 +1,7 @@
 import arg from 'arg';
 import inquirer from 'inquirer';
 import path from 'path';
+import { packageList } from './packages';
 
 async function getConfig(rawArgs) {
   const args = arg(
@@ -40,5 +41,6 @@ async function getConfig(rawArgs) {
 
 export async function cli(args) {
   const options = await getConfig(args);
+  packageList(options);
   console.log(options);
 }
