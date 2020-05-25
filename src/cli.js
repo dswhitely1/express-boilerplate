@@ -27,7 +27,7 @@ async function getConfig(rawArgs) {
   const currentFileUrl = import.meta.url;
   const templateDir = path.resolve(
     new URL(currentFileUrl).pathname,
-    '../template'
+    '../../template'
   );
   const targetDirectory = `${process.cwd()}/${options.directory ||
     answers.directory}`;
