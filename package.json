@@ -1,0 +1,20 @@
+{
+  "name": "express-boilerplate",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/dswhitely1/express-boilerplate.git"
+  },
+  "keywords": [],
+  "author": "Donald Whitely <dswhitely1@gmail.com> (https://www.donwhitely.com/)",
+  "license": "0BSD",
+  "bugs": {
+    "url": "https://github.com/dswhitely1/express-boilerplate/issues"
+  },
+  "homepage": "https://github.com/dswhitely1/express-boilerplate#readme"
+}
