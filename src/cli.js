@@ -33,6 +33,9 @@ async function getConfig(rawArgs) {
   const targetDirectory = `${process.cwd()}/${options.directory ||
     answers.directory}`;
   return {
+    pkgMgr: 'yarn',
+    flags: ['add'],
+    devFlags: ['--dev'],
     directory: options.directory || answers.directory,
     templateDirectory: templateDir,
     targetDirectory,

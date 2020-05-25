@@ -21,8 +21,8 @@ export const packageList = options => {
   console.log(Object.keys(packages));
   Object.keys(packages).forEach(pkgs => {
     pkgList[pkgs] = packageListGenerator(
-      'yarn',
-      ['add'],
+      options.pkgMgr,
+      options.flags,
       packages[pkgs],
       options
     );
