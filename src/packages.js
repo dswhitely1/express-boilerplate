@@ -31,8 +31,8 @@ export const packageList = options => {
   Object.keys(devPackages).forEach(
     pkgs =>
       (pkgList[pkgs] = packageListGenerator(
-        'yarn',
-        ['add', '--dev'],
+        options.pkgMgr,
+        [...options.flags, ...options.devFlags],
         devPackages[pkgs],
         options
       ))
