@@ -37,12 +37,18 @@ const scripts = {
 const addToPkgJson = options => {
   const filename = `${options.targetDirectory}/package.json`;
 
+  const startCommand =
+    options.pkgMgr === 'yarn' ? 'yarn build' : 'npm run build';
+  const newScripts = {
+    ...scripts,
+    prestart: startCommand,
+  };
   const rawData = fs.readFileSync(filename);
   const data = JSON.parse(rawData);
   const newData = {
     ...data,
     husky,
-    scripts,
+    scripts: newScripts,
     'lint-staged': lintStaged,
     eslintConfig,
   };
@@ -86,7 +92,7 @@ const esLintSetup = options => {
   return taskListGenerator('EsLint Install', [esLintInstall]);
 };
 
-export const copyFiles = async options => {
+const copyFiles = async options => {
   try {
     await access(options.templateDirectory, fs.constants.R_OK);
   } catch (error) {
