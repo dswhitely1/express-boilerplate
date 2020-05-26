@@ -3,6 +3,7 @@ import inquirer from 'inquirer';
 import path from 'path';
 import execa from 'execa';
 import { packageList } from './packages';
+import { preInstall } from './config';
 
 async function getConfig(rawArgs) {
   const args = arg(
@@ -56,5 +57,6 @@ async function getConfig(rawArgs) {
 
 export async function cli(args) {
   const options = await getConfig(args);
-  console.log(options);
+  const trial = preInstall(options);
+  console.log(trial);
 }

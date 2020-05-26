@@ -1,5 +1,17 @@
 import fs from 'fs';
+import ncp from 'ncp';
+import { promisify } from 'util';
+import chalk from 'chalk';
 import { listGenerator, taskListGenerator } from './utils';
+
+const access = promisify(fs.access);
+const copy = promisify(ncp);
+
+async function copyTemplateFiles(options) {
+  return copy(options.templateDirectory, options.targetDirectory, {
+    clobber: false,
+  });
+}
 
 const husky = {
   hooks: {
@@ -69,10 +81,24 @@ const esLintSetup = options => {
   return taskListGenerator('EsLint Install', [esLintInstall]);
 };
 
+export const copyFiles = async options => {
+  try {
+    await access(options.templateDirectory, fs.constants.R_OK);
+  } catch (error) {
+    console.error('%s Invalid Template name', chalk.red.bold('ERROR'));
+  }
+
+  return {
+    title: 'Copying Files',
+    task: () => copyTemplateFiles(options),
+  };
+};
+
 export const preInstall = options => {
   const git = gitSetup(options);
   const npm = npmSetup(options);
   const esLint = esLintSetup(options);
+  const copyTemplate = copyFiles(options);
 
-  return taskListGenerator('PreInstall', [git, npm, esLint]);
+  return taskListGenerator('PreInstall', [git, npm, copyTemplate, esLint]);
 };
