@@ -1,21 +1,21 @@
 import { packageListGenerator, taskListGenerator } from './utils';
 
 const packages = {
-  express: ['express'],
-  middleware: ['helmet', 'cors', 'compression'],
+  Express: ['express'],
+  Middleware: ['helmet', 'cors', 'compression'],
+  'Build Tools': ['rimraf'],
 };
 
 const devPackages = {
-  typescript: ['typescript', 'tsc-watch'],
-  types: [
+  TypeScript: ['typescript', 'tsc-watch'],
+  Types: [
     '@types/node',
     '@types/express',
     '@types/cors',
     '@types/helmet',
     '@types/compression',
   ],
-  gitTools: ['husky', 'lint-staged'],
-  other: ['rimraf'],
+  'Git Tools': ['husky', 'lint-staged'],
 };
 
 export const packageList = options => {
@@ -40,14 +40,19 @@ export const packageList = options => {
       ))
   );
 
-  const dependencies = Object.keys(packages).map(pkgs => pkgList[pkgs]);
-  const devDependencies = Object.keys(devPackages).map(pkgs => pkgList[pkgs]);
+  const taskList = {};
 
-  const dependencyTask = taskListGenerator('Dependencies', dependencies);
-  const devDependencyTask = taskListGenerator(
-    'Development Dependencies',
-    devDependencies
-  );
+  Object.keys(pkgList).forEach(pkgs => {
+    taskList[pkgs] = taskListGenerator(`${pkgs}`, pkgList[pkgs]);
+  });
+
+  const dependencies = Object.keys(packages).map(pkgs => taskList[pkgs]);
+  const devDependencies = Object.keys(devPackages).map(pkgs => taskList[pkgs]);
+
+  const dependencyTask = taskListGenerator('Dependencies', [...dependencies]);
+  const devDependencyTask = taskListGenerator('Development Dependencies', [
+    ...devDependencies,
+  ]);
 
   return taskListGenerator('Project Install', [
     dependencyTask,

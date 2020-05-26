@@ -62,7 +62,12 @@ const gitSetup = options => {
 };
 
 const npmSetup = options => {
-  const npmInit = listGenerator(options.pkgMgr, ['init'], options);
+  const npmInit = listGenerator(
+    'NPM Init',
+    options.pkgMgr,
+    ['init', '-y'],
+    options
+  );
   const pkgJson = {
     title: 'Adding to Package JSON',
     task: () => addToPkgJson(options),
@@ -74,7 +79,7 @@ const esLintSetup = options => {
   const esLintInstall = listGenerator(
     'EsLint Install',
     'npx',
-    ['install-peerdeps', '--dev', 'eslint-config-wesbos'],
+    ['install-peerdeps', '--dev', '-Y', 'eslint-config-wesbos'],
     options
   );
 
@@ -94,11 +99,11 @@ export const copyFiles = async options => {
   };
 };
 
-export const preInstall = options => {
+export const preInstall = async options => {
   const git = gitSetup(options);
   const npm = npmSetup(options);
   const esLint = esLintSetup(options);
-  const copyTemplate = copyFiles(options);
+  const copyTemplate = await copyFiles(options);
 
-  return taskListGenerator('PreInstall', [git, npm, copyTemplate, esLint]);
+  return taskListGenerator('PreInstall', [copyTemplate, git, npm, esLint]);
 };

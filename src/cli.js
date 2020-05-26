@@ -2,8 +2,10 @@ import arg from 'arg';
 import inquirer from 'inquirer';
 import path from 'path';
 import execa from 'execa';
+import chalk from 'chalk';
 import { packageList } from './packages';
 import { preInstall } from './config';
+import { createProject } from './main';
 
 async function getConfig(rawArgs) {
   const args = arg(
@@ -27,8 +29,18 @@ async function getConfig(rawArgs) {
 
   const answers = await inquirer.prompt(questions);
 
+  const currentFileUrl = import.meta.url;
+  const templateDir = path.resolve(
+    new URL(currentFileUrl).pathname,
+    '../../template'
+  );
+  const targetDirectory = `${process.cwd()}/${options.directory ||
+    answers.directory}`;
+
   try {
-    await execa('yarn', ['--version']);
+    await execa('yarn', ['--version'], {
+      cwd: targetDirectory,
+    });
     options.pkgMgr = 'yarn';
     options.flags = ['add'];
     options.devFlags = ['--dev'];
@@ -37,14 +49,6 @@ async function getConfig(rawArgs) {
     options.flags = ['install'];
     options.devFlags = ['-D'];
   }
-
-  const currentFileUrl = import.meta.url;
-  const templateDir = path.resolve(
-    new URL(currentFileUrl).pathname,
-    '../../template'
-  );
-  const targetDirectory = `${process.cwd()}/${options.directory ||
-    answers.directory}`;
   return {
     pkgMgr: options.pkgMgr,
     flags: options.flags,
@@ -57,6 +61,6 @@ async function getConfig(rawArgs) {
 
 export async function cli(args) {
   const options = await getConfig(args);
-  const trial = preInstall(options);
-  console.log(trial);
+  await createProject(options);
+  console.log('%s Installation Complete', chalk.green.bold('DONE'));
 }
