@@ -14,11 +14,13 @@ const devPackages = {
     '@types/helmet',
     '@types/compression',
   ],
+  gitTools: ['husky', 'lint-staged'],
+  other: ['rimraf'],
 };
 
 export const packageList = options => {
   const pkgList = {};
-  console.log(Object.keys(packages));
+
   Object.keys(packages).forEach(pkgs => {
     pkgList[pkgs] = packageListGenerator(
       options.pkgMgr,

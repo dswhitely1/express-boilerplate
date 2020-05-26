@@ -27,7 +27,7 @@ async function getConfig(rawArgs) {
   const answers = await inquirer.prompt(questions);
 
   try {
-    const result = await execa('yarn', ['--version']);
+    await execa('yarn', ['--version']);
     options.pkgMgr = 'yarn';
     options.flags = ['add'];
     options.devFlags = ['--dev'];
@@ -35,7 +35,6 @@ async function getConfig(rawArgs) {
     options.pkgMgr = 'npm';
     options.flags = ['install'];
     options.devFlags = ['-D'];
-    process.exit(1);
   }
 
   const currentFileUrl = import.meta.url;
